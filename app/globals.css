@@ -1,26 +1,210 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: rgb(0, 174, 255);
+  --foreground: #0d1527;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-albert-sans), system-ui, sans-serif;
+  --font-mono: var(--font-fragment-mono), monospace;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-albert-sans), system-ui, sans-serif;
+}
+
+/* Custom Webkit Masking classes */
+.reveal-mask {
+  mask-image: radial-gradient(circle var(--reveal-radius, 0px) at var(--reveal-x, -999px) var(--reveal-y, -999px),
+      #000000 0%,
+      rgba(0, 0, 0, 0.9) 60%,
+      transparent 100%);
+  -webkit-mask-image: radial-gradient(circle var(--reveal-radius, 0px) at var(--reveal-x, -999px) var(--reveal-y, -999px),
+      #000000 0%,
+      rgba(0, 0, 0, 0.9) 60%,
+      transparent 100%);
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+}
+
+/* Entrance Animations */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(1.035);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes headingUp {
+  from {
+    opacity: 0;
+    transform: translateY(48px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes contentUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-portrait {
+  animation: fadeInScale 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-nav {
+  animation: fadeDown 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+  opacity: 0;
+}
+
+.animate-headline-1 {
+  animation: headingUp 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+  opacity: 0;
+}
+
+.animate-headline-2 {
+  animation: headingUp 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
+  opacity: 0;
+}
+
+.animate-headline-3 {
+  animation: headingUp 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+  opacity: 0;
+}
+
+.animate-intro {
+  animation: contentUp 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+  opacity: 0;
+}
+
+.animate-manifesto {
+  animation: contentUp 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards;
+  opacity: 0;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Scroll Animation Classes */
+.reveal-section {
+  opacity: 0;
+  transform: translateY(2rem);
+  transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stagger-item {
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-section.visible .stagger-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger item delays */
+.reveal-section.visible .stagger-delay-1 {
+  transition-delay: 0.1s;
+}
+
+.reveal-section.visible .stagger-delay-2 {
+  transition-delay: 0.2s;
+}
+
+.reveal-section.visible .stagger-delay-3 {
+  transition-delay: 0.3s;
+}
+
+.reveal-section.visible .stagger-delay-4 {
+  transition-delay: 0.4s;
+}
+
+.reveal-section.visible .stagger-delay-5 {
+  transition-delay: 0.5s;
+}
+
+.reveal-section.visible .stagger-delay-6 {
+  transition-delay: 0.6s;
+}
+
+/* Custom premium styling helpers */
+.glass-card {
+  background: rgba(244, 247, 252, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.5);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  background: rgba(244, 247, 252, 0.85);
+  border-color: rgba(6, 182, 212, 0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(6, 182, 212, 0.05);
+}
+
+/* Accessibility: Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+
+  .animate-portrait,
+  .animate-nav,
+  .animate-headline-1,
+  .animate-headline-2,
+  .animate-headline-3,
+  .animate-intro,
+  .animate-manifesto,
+  .reveal-section,
+  .stagger-item {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+  }
 }
