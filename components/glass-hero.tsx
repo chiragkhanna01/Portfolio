@@ -5,6 +5,146 @@ import React, { useRef, useEffect, useState } from "react";
 const DESKTOP_RADIUS = 235;
 const MOBILE_RADIUS = 150;
 
+interface Certificate {
+  id: string;
+  title: string;
+  issuer: string;
+  date: string;
+  verificationUrl: string;
+  type: "Academic Course" | "Professional Course" | "Professional Certification";
+}
+
+const CERTIFICATES: Certificate[] = [
+  {
+    id: "B7N3QQCUCEMC",
+    title: "Environment Science, Waste, and Disaster Management",
+    issuer: "Chandigarh University",
+    date: "Oct 16, 2024",
+    verificationUrl: "https://coursera.org/verify/B7N3QQCUCEMC",
+    type: "Academic Course"
+  },
+  {
+    id: "UW43HGVAWV5V",
+    title: "Health and Yoga",
+    issuer: "Chandigarh University",
+    date: "Oct 16, 2024",
+    verificationUrl: "https://coursera.org/verify/UW43HGVAWV5V",
+    type: "Academic Course"
+  },
+  {
+    id: "4HC7JLIX2ZEN",
+    title: "Microcontroller and Industrial Applications",
+    issuer: "L&T EduTech",
+    date: "Oct 16, 2024",
+    verificationUrl: "https://coursera.org/verify/4HC7JLIX2ZEN",
+    type: "Professional Course"
+  },
+  {
+    id: "E0Q46KJO5UA8",
+    title: "Public Health Perspectives on Sustainable Diets",
+    issuer: "Johns Hopkins University",
+    date: "Oct 16, 2024",
+    verificationUrl: "https://coursera.org/verify/E0Q46KJO5UA8",
+    type: "Academic Course"
+  },
+  {
+    id: "V4C4MZMWVVJV",
+    title: "Introduction to the Internet of Things and Embedded Systems",
+    issuer: "University of California, Irvine",
+    date: "Oct 16, 2024",
+    verificationUrl: "https://coursera.org/verify/V4C4MZMWVVJV",
+    type: "Academic Course"
+  },
+  {
+    id: "VF84FHUSEDPQ",
+    title: "The Arduino Platform and C Programming",
+    issuer: "University of California, Irvine",
+    date: "Oct 20, 2024",
+    verificationUrl: "https://coursera.org/verify/VF84FHUSEDPQ",
+    type: "Academic Course"
+  },
+  {
+    id: "ELLXWGOMS6PD",
+    title: "Interfacing with the Arduino",
+    issuer: "University of California, Irvine",
+    date: "Oct 22, 2024",
+    verificationUrl: "https://coursera.org/verify/ELLXWGOMS6PD",
+    type: "Academic Course"
+  },
+  {
+    id: "SUUAY0CS7V41",
+    title: "Introduction to Databases",
+    issuer: "Meta",
+    date: "Feb 25, 2025",
+    verificationUrl: "https://coursera.org/verify/SUUAY0CS7V41",
+    type: "Professional Certification"
+  },
+  {
+    id: "PFZ9LDXTGHD0",
+    title: "SQL: A Practical Introduction for Querying Databases",
+    issuer: "IBM",
+    date: "Feb 25, 2025",
+    verificationUrl: "https://coursera.org/verify/PFZ9LDXTGHD0",
+    type: "Professional Course"
+  },
+  {
+    id: "EAOIUHSW6DG1",
+    title: "5G Network Fundamentals",
+    issuer: "Institut Mines-Télécom",
+    date: "Mar 6, 2025",
+    verificationUrl: "https://coursera.org/verify/EAOIUHSW6DG1",
+    type: "Academic Course"
+  },
+  {
+    id: "NEJNH33B4CGM",
+    title: "Introduction to NoSQL Databases",
+    issuer: "IBM",
+    date: "Mar 19, 2025",
+    verificationUrl: "https://coursera.org/verify/NEJNH33B4CGM",
+    type: "Professional Course"
+  },
+  {
+    id: "1POFF5E10YVH",
+    title: "Introduction to Relational Databases (RDBMS)",
+    issuer: "IBM",
+    date: "Mar 20, 2025",
+    verificationUrl: "https://coursera.org/verify/1POFF5E10YVH",
+    type: "Professional Course"
+  },
+  {
+    id: "UIK1NOXUEMBQ",
+    title: "Databases and SQL for Data Science with Python",
+    issuer: "IBM",
+    date: "Mar 21, 2025",
+    verificationUrl: "https://coursera.org/verify/UIK1NOXUEMBQ",
+    type: "Professional Course"
+  },
+  {
+    id: "GL0Q0W7MTWYE",
+    title: "C# for .NET Developers",
+    issuer: "Board Infinity",
+    date: "Jun 11, 2025",
+    verificationUrl: "https://coursera.org/verify/GL0Q0W7MTWYE",
+    type: "Professional Course"
+  },
+  {
+    id: "IEDSY67WHMKR",
+    title: ".Net Full Stack Foundation",
+    issuer: "Board Infinity",
+    date: "Jun 11, 2025",
+    verificationUrl: "https://coursera.org/verify/IEDSY67WHMKR",
+    type: "Professional Course"
+  },
+  {
+    id: "ZVRFY3DVQYW3",
+    title: "Design and Analyze Secure Networked Systems",
+    issuer: "University of Colorado System",
+    date: "Mar 14, 2026",
+    verificationUrl: "https://coursera.org/verify/ZVRFY3DVQYW3",
+    type: "Academic Course"
+  }
+];
+
 export default function GlassHero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const rawXRef = useRef(-999);
@@ -18,6 +158,62 @@ export default function GlassHero() {
 
   // State to track the active viewport section
   const [activeSection, setActiveSection] = useState("hero");
+
+  // Certification Filtering & Expansion States
+  const [certFilter, setCertFilter] = useState("all");
+  const [showAllCerts, setShowAllCerts] = useState(false);
+
+  // Verification Portal States
+  const [verifyInput, setVerifyInput] = useState("");
+  const [verificationResult, setVerificationResult] = useState<Certificate | null>(null);
+  const [verifyStatus, setVerifyStatus] = useState<"idle" | "searching" | "checking" | "verified" | "not_found">("idle");
+  const [verifySteps, setVerifySteps] = useState<string[]>([]);
+  const [currentStepIdx, setCurrentStepIdx] = useState(-1);
+
+  // Handle simulated verification search
+  const handleVerify = (credentialId: string) => {
+    const cleanId = credentialId.trim().toUpperCase();
+    if (!cleanId) return;
+
+    setVerifyStatus("searching");
+    setVerificationResult(null);
+    setCurrentStepIdx(0);
+    
+    const steps = [
+      "Locating credential record in local registry...",
+      "Resolving signature from cryptographic vault...",
+      "Authenticating verification status with Coursera network API...",
+      "Verification complete. Certificate signature match found!"
+    ];
+    setVerifySteps(steps);
+
+    // Step-by-step logging animation
+    let step = 0;
+    const interval = setInterval(() => {
+      step++;
+      if (step < steps.length) {
+        setCurrentStepIdx(step);
+      } else {
+        clearInterval(interval);
+        const match = CERTIFICATES.find(c => c.id.toUpperCase() === cleanId);
+        if (match) {
+          setVerificationResult(match);
+          setVerifyStatus("verified");
+        } else {
+          setVerifyStatus("not_found");
+        }
+      }
+    }, 400);
+  };
+
+  const triggerVerifyFromCard = (credentialId: string) => {
+    setVerifyInput(credentialId);
+    const portalEl = document.getElementById("verification-portal");
+    if (portalEl) {
+      portalEl.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+    handleVerify(credentialId);
+  };
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -789,82 +985,331 @@ export default function GlassHero() {
           className="reveal-section w-full px-[max(5.6vw,2rem)] py-24 md:py-36 bg-white border-b border-slate-100 text-left"
         >
           <div className="max-w-6xl mx-auto">
-            <span className="text-cyan-600 font-mono tracking-widest text-xs uppercase font-medium stagger-item stagger-delay-1">
-
+            <span className="text-cyan-600 font-mono tracking-widest text-xs uppercase font-medium stagger-item stagger-delay-1 block mb-2">
+              VERIFIABLE CREDENTIALS
             </span>
-            <h2 className="font-sans font-light text-[2.25rem] md:text-[3rem] leading-[1.15] tracking-[-0.035em] text-slate-950 mt-4 mb-16 stagger-item stagger-delay-2 uppercase">
+            <h2 className="font-sans font-light text-[2.25rem] md:text-[3rem] leading-[1.15] tracking-[-0.035em] text-slate-950 mt-2 mb-10 stagger-item stagger-delay-2 uppercase">
               Certifications & Core Courses.
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-item stagger-delay-3">
-              {/* Certification 1 */}
-              <div className="p-6 bg-[#f4f7fc]/40 border border-slate-200/50 rounded-2xl flex flex-col justify-between hover:border-slate-300 transition-colors">
-                <div>
-                  <span className="text-[10px] font-mono text-cyan-600 uppercase tracking-widest block mb-2">
-                    ACADEMIC COURSE
-                  </span>
-                  <h3 className="text-base font-medium text-slate-950 mb-1 leading-snug">
-                    Object-Oriented Programming
-                  </h3>
-                  <p className="text-xs font-light text-slate-500">Chandigarh University</p>
-                </div>
-                <div className="mt-8 flex items-center justify-between border-t border-slate-200/40 pt-4">
-                  <span className="text-[10px] font-mono text-slate-400">COMPLETED 2024</span>
-                  <span className="text-xs font-light text-slate-400 italic">Certified Core</span>
-                </div>
-              </div>
+            {/* Interactive Verification Portal */}
+            <div 
+              id="verification-portal" 
+              className="mb-16 p-8 md:p-10 rounded-[2.5rem] border border-slate-200/50 bg-gradient-to-b from-slate-50/50 to-white/70 backdrop-blur-lg shadow-xs hover:shadow-md transition-all duration-300 relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-cyan-100/30 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-indigo-100/30 rounded-full blur-2xl pointer-events-none" />
+              
+              <div className="max-w-3xl relative z-10">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-medium text-cyan-700 bg-cyan-50 border border-cyan-100 uppercase tracking-wider mb-4">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+                  Instant Verification Registry
+                </span>
+                <h3 className="text-2xl font-medium text-slate-900 mb-2">
+                  Verify Credentials in Real-Time
+                </h3>
+                <p className="text-sm font-light text-slate-500 mb-8 max-w-2xl leading-relaxed">
+                  Enter a Coursera Credential ID manually, or choose a course from the selector below. The system will retrieve cryptographically signed completion records.
+                </p>
 
-              {/* Certification 2 */}
-              <div className="p-6 bg-[#f4f7fc]/40 border border-slate-200/50 rounded-2xl flex flex-col justify-between hover:border-slate-300 transition-colors">
-                <div>
-                  <span className="text-[10px] font-mono text-cyan-600 uppercase tracking-widest block mb-2">
-                    ACADEMIC COURSE
-                  </span>
-                  <h3 className="text-base font-medium text-slate-950 mb-1 leading-snug">
-                    Data Structures & Algorithms
-                  </h3>
-                  <p className="text-xs font-light text-slate-500">Chandigarh University</p>
-                </div>
-                <div className="mt-8 flex items-center justify-between border-t border-slate-200/40 pt-4">
-                  <span className="text-[10px] font-mono text-slate-400">COMPLETED 2024</span>
-                  <span className="text-xs font-light text-slate-400 italic">Certified Core</span>
-                </div>
-              </div>
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                  {/* Select Dropdown */}
+                  <div className="md:col-span-5">
+                    <label htmlFor="cert-select" className="block text-[10px] font-mono text-slate-400 uppercase tracking-widest mb-2 font-medium">
+                      Select Certificate
+                    </label>
+                    <select
+                      id="cert-select"
+                      className="w-full h-11 px-4 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-cyan-500 text-slate-700 font-light transition-all appearance-none cursor-pointer"
+                      style={{ backgroundImage: `url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E")`, backgroundPosition: 'right 0.75rem center', backgroundSize: '1.25rem', backgroundRepeat: 'no-repeat' }}
+                      value={verifyInput}
+                      onChange={(e) => setVerifyInput(e.target.value)}
+                    >
+                      <option value="" disabled>-- Choose a course --</option>
+                      {CERTIFICATES.map(c => (
+                        <option key={c.id} value={c.id}>
+                          {c.title} ({c.issuer})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-              {/* Certification 3 */}
-              <div className="p-6 bg-[#f4f7fc]/40 border border-slate-200/50 rounded-2xl flex flex-col justify-between hover:border-slate-300 transition-colors">
-                <div>
-                  <span className="text-[10px] font-mono text-cyan-600 uppercase tracking-widest block mb-2">
-                    ACADEMIC COURSE
-                  </span>
-                  <h3 className="text-base font-medium text-slate-950 mb-1 leading-snug">
-                    Database Management (DBMS)
-                  </h3>
-                  <p className="text-xs font-light text-slate-500">Chandigarh University</p>
-                </div>
-                <div className="mt-8 flex items-center justify-between border-t border-slate-200/40 pt-4">
-                  <span className="text-[10px] font-mono text-slate-400">COMPLETED 2025</span>
-                  <span className="text-xs font-light text-slate-400 italic">Certified Core</span>
-                </div>
-              </div>
+                  {/* Manual ID Input */}
+                  <div className="md:col-span-4">
+                    <label htmlFor="cert-id-input" className="block text-[10px] font-mono text-slate-400 uppercase tracking-widest mb-2 font-medium">
+                      Or Paste Credential ID
+                    </label>
+                    <input
+                      id="cert-id-input"
+                      type="text"
+                      placeholder="e.g. B7N3QQCUCEMC"
+                      className="w-full h-11 px-4 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-cyan-500 font-light placeholder:text-slate-400 text-slate-800 transition-all uppercase tracking-wider"
+                      value={verifyInput}
+                      onChange={(e) => setVerifyInput(e.target.value)}
+                    />
+                  </div>
 
-              {/* Certification 4 */}
-              <div className="p-6 bg-[#f4f7fc]/40 border border-slate-200/50 rounded-2xl flex flex-col justify-between hover:border-slate-300 transition-colors">
-                <div>
-                  <span className="text-[10px] font-mono text-cyan-600 uppercase tracking-widest block mb-2">
-                    SELF DIRECTED
-                  </span>
-                  <h3 className="text-base font-medium text-slate-950 mb-1 leading-snug">
-                    UI automated quality testing
-                  </h3>
-                  <p className="text-xs font-light text-slate-500">WebDriver Frameworks</p>
+                  {/* Verify Button */}
+                  <div className="md:col-span-3">
+                    <button
+                      onClick={() => handleVerify(verifyInput)}
+                      disabled={!verifyInput.trim() || verifyStatus === "searching"}
+                      className="w-full h-11 inline-flex items-center justify-center bg-slate-950 hover:bg-slate-900 text-white rounded-xl text-sm font-medium transition-all hover:scale-[1.02] disabled:scale-100 disabled:opacity-50 disabled:cursor-not-allowed shadow-xs hover:shadow-md cursor-pointer"
+                    >
+                      {verifyStatus === "searching" ? (
+                        <span className="flex items-center gap-2">
+                          <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                          </svg>
+                          Verifying...
+                        </span>
+                      ) : (
+                        "Verify Credential"
+                      )}
+                    </button>
+                  </div>
                 </div>
-                <div className="mt-8 flex items-center justify-between border-t border-slate-200/40 pt-4">
-                  <span className="text-[10px] font-mono text-slate-400">COMPLETED 2025</span>
-                  <span className="text-xs font-light text-slate-400 italic">Applied Skills</span>
-                </div>
+
+                {/* Verification Process / Results display */}
+                {verifyStatus === "searching" && (
+                  <div className="mt-8 p-5 bg-slate-900 text-slate-300 rounded-2xl font-mono text-xs border border-slate-800 shadow-inner">
+                    <div className="flex items-center gap-2 mb-3 text-cyan-400 font-bold border-b border-slate-800 pb-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
+                      CR-SYSTEM CERTIFICATE AUTHENTICATION SERVICE
+                    </div>
+                    <div className="space-y-1.5 font-light">
+                      {verifySteps.slice(0, currentStepIdx + 1).map((stepText, idx) => (
+                        <div key={idx} className="flex items-start gap-2 animate-fadeIn">
+                          <span className="text-cyan-500 font-bold">&gt;</span>
+                          <span>{stepText}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {verifyStatus === "verified" && verificationResult && (
+                  <div className="mt-8 p-6 md:p-8 bg-emerald-50/50 border border-emerald-200 rounded-[2rem] shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6 animate-fadeIn">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0 shadow-xs">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 flex-wrap mb-1">
+                          <span className="text-xs font-mono font-medium text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                            SECURELY VERIFIED
+                          </span>
+                          <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">
+                            ID: {verificationResult.id}
+                          </span>
+                        </div>
+                        <h4 className="text-lg font-medium text-slate-950 leading-snug mb-1">
+                          {verificationResult.title}
+                        </h4>
+                        <p className="text-xs font-light text-slate-600">
+                          Issued by <span className="font-semibold">{verificationResult.issuer}</span> &bull; Completed {verificationResult.date}
+                        </p>
+                        <p className="text-xs font-light text-slate-500 mt-1 italic">
+                          Recipient: Chirag Khanna &bull; Registry Authenticator: Coursera Authority Node
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-row md:flex-col gap-3 w-full md:w-auto shrink-0 border-t border-emerald-200/50 md:border-t-0 pt-4 md:pt-0">
+                      <a
+                        href={verificationResult.verificationUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex-1 md:flex-initial h-10 inline-flex items-center justify-center px-5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-medium transition-all hover:scale-[1.02] gap-1.5 focus:outline-none"
+                      >
+                        Official Profile
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                        </svg>
+                      </a>
+                      <button
+                        onClick={() => {
+                          setVerifyStatus("idle");
+                          setVerifyInput("");
+                          setVerificationResult(null);
+                        }}
+                        className="flex-1 md:flex-initial h-10 inline-flex items-center justify-center px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-medium transition-all cursor-pointer focus:outline-none"
+                      >
+                        Reset Search
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {verifyStatus === "not_found" && (
+                  <div className="mt-8 p-6 bg-rose-50/50 border border-rose-200 rounded-[2rem] shadow-xs flex items-start gap-4 animate-fadeIn">
+                    <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 shrink-0">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <span className="text-xs font-mono font-medium text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full uppercase tracking-wider block w-fit mb-1">
+                        RECORD NOT FOUND
+                      </span>
+                      <h4 className="text-base font-medium text-slate-950 mb-1 leading-snug">
+                        Could not resolve Credential ID
+                      </h4>
+                      <p className="text-xs font-light text-slate-600 max-w-lg leading-relaxed mb-3">
+                        We could not verify any certificate associated with ID &quot;<span className="font-mono font-semibold text-rose-700">{verifyInput}</span>&quot;. Please verify the code matches one of the values below (e.g. B7N3QQCUCEMC) and try again.
+                      </p>
+                      <button
+                        onClick={() => {
+                          setVerifyStatus("idle");
+                          setVerifyInput("");
+                        }}
+                        className="h-9 inline-flex items-center justify-center px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-medium transition-all cursor-pointer focus:outline-none"
+                      >
+                        Try Again
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
+
+            {/* Filter Tabs */}
+            <div className="flex flex-wrap gap-2 mb-8 border-b border-slate-100 pb-6 stagger-item stagger-delay-3">
+              {[
+                { id: "all", name: "All", count: CERTIFICATES.length },
+                { id: "IBM", name: "IBM", count: CERTIFICATES.filter(c => c.issuer === "IBM").length },
+                { id: "UC Irvine", name: "UC Irvine", count: CERTIFICATES.filter(c => c.issuer.includes("Irvine")).length },
+                { id: "Chandigarh University", name: "Chandigarh Univ", count: CERTIFICATES.filter(c => c.issuer.includes("Chandigarh")).length },
+                { id: "Board Infinity", name: "Board Infinity", count: CERTIFICATES.filter(c => c.issuer.includes("Board")).length },
+                { id: "others", name: "Others", count: CERTIFICATES.filter(c => !["IBM", "University of California, Irvine", "Chandigarh University", "Board Infinity"].includes(c.issuer)).length },
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => {
+                    setCertFilter(tab.id);
+                    setShowAllCerts(false);
+                  }}
+                  className={`px-4 py-2 rounded-full text-xs font-medium tracking-wide transition-all duration-200 cursor-pointer flex items-center gap-1.5 focus:outline-none ${
+                    certFilter === tab.id
+                      ? "bg-slate-900 text-white shadow-xs"
+                      : "bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-slate-800"
+                  }`}
+                >
+                  {tab.name}
+                  <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-full ${
+                    certFilter === tab.id
+                      ? "bg-slate-800 text-slate-200"
+                      : "bg-slate-200/60 text-slate-500"
+                  }`}>
+                    {tab.count}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* Expandable Certificate Grid */}
+            {(() => {
+              const filteredCerts = CERTIFICATES.filter(c => {
+                if (certFilter === "all") return true;
+                if (certFilter === "others") {
+                  return !["IBM", "University of California, Irvine", "Chandigarh University", "Board Infinity"].includes(c.issuer);
+                }
+                return c.issuer.includes(certFilter) || certFilter.includes(c.issuer);
+              });
+              
+              const displayedCerts = showAllCerts ? filteredCerts : filteredCerts.slice(0, 8);
+
+              return (
+                <div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 stagger-item stagger-delay-4">
+                    {displayedCerts.map((cert) => (
+                      <div 
+                        key={cert.id} 
+                        className="p-6 bg-slate-50/40 border border-slate-200/50 rounded-2xl flex flex-col justify-between hover:border-slate-300/80 transition-all duration-300 hover:shadow-xs group"
+                      >
+                        <div>
+                          <div className="flex items-center justify-between mb-4">
+                            <span className="text-[9px] font-mono font-medium text-cyan-600 uppercase tracking-widest">
+                              {cert.type}
+                            </span>
+                            
+                            {/* Visual Logo Badges */}
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/80 border border-slate-200 text-slate-500 scale-95 uppercase font-medium">
+                              {cert.issuer.includes("IBM") ? "IBM" :
+                               cert.issuer.includes("Irvine") ? "UCI" :
+                               cert.issuer.includes("Chandigarh") ? "CU" :
+                               cert.issuer.includes("Board") ? "BI" :
+                               cert.issuer.includes("Meta") ? "Meta" : "EDU"}
+                            </span>
+                          </div>
+                          
+                          <h3 className="text-sm font-medium text-slate-900 mb-1.5 leading-snug line-clamp-2 h-10 group-hover:text-cyan-700 transition-colors">
+                            {cert.title}
+                          </h3>
+                          <p className="text-xs font-light text-slate-500 mb-6">{cert.issuer}</p>
+                        </div>
+                        
+                        <div className="border-t border-slate-200/40 pt-4 mt-auto">
+                          <div className="flex items-center justify-between mb-3 text-[10px] font-mono text-slate-400">
+                            <span>{cert.date.toUpperCase()}</span>
+                            <span>ID: {cert.id}</span>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-2">
+                            <button
+                              onClick={() => triggerVerifyFromCard(cert.id)}
+                              className="h-8 inline-flex items-center justify-center bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg text-[10px] font-medium transition-all hover:border-cyan-500 hover:text-cyan-600 focus:outline-none cursor-pointer"
+                            >
+                              Verify Instantly
+                            </button>
+                            <a
+                              href={cert.verificationUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="h-8 inline-flex items-center justify-center bg-slate-950 hover:bg-slate-900 text-white rounded-lg text-[10px] font-medium transition-all gap-1 focus:outline-none"
+                            >
+                              Link
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                              </svg>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Show More / Show Less buttons */}
+                  {filteredCerts.length > 8 && (
+                    <div className="flex justify-center mt-12">
+                      <button
+                        onClick={() => setShowAllCerts(!showAllCerts)}
+                        className="h-10 inline-flex items-center justify-center px-6 border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-medium rounded-full text-xs transition-all shadow-xs cursor-pointer focus:outline-none"
+                      >
+                        {showAllCerts ? (
+                          <span className="flex items-center gap-1.5">
+                            Collapse View
+                            <svg className="w-3.5 h-3.5 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                            </svg>
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1.5">
+                            View All ({filteredCerts.length}) Certificates
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                            </svg>
+                          </span>
+                        )}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
           </div>
         </section>
 
@@ -1007,12 +1452,14 @@ export default function GlassHero() {
                   khannachirag2004@gmail.com
                 </a>
               </div>
+              {/*
               <div className="p-5 bg-white border border-slate-200/50 rounded-xl">
                 <span className="text-[10px] font-mono text-slate-400 block mb-1">PHONE</span>
                 <a href="tel:+917027182022" className="text-sm text-slate-800 hover:text-cyan-600 transition-colors font-medium focus-visible:outline-none">
                   +91-7027182022
                 </a>
               </div>
+              */}
               <div className="p-5 bg-white border border-slate-200/50 rounded-xl col-span-2 md:col-span-1">
                 <span className="text-[10px] font-mono text-slate-400 block mb-1">LOCATION</span>
                 <span className="text-sm text-slate-800 font-medium">Chandigarh, India</span>
