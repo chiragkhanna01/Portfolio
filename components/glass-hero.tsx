@@ -1452,14 +1452,7 @@ export default function GlassHero() {
                   khannachirag2004@gmail.com
                 </a>
               </div>
-              {/*
-              <div className="p-5 bg-white border border-slate-200/50 rounded-xl">
-                <span className="text-[10px] font-mono text-slate-400 block mb-1">PHONE</span>
-                <a href="tel:+917027182022" className="text-sm text-slate-800 hover:text-cyan-600 transition-colors font-medium focus-visible:outline-none">
-                  +91-7027182022
-                </a>
-              </div>
-              */}
+           
               <div className="p-5 bg-white border border-slate-200/50 rounded-xl col-span-2 md:col-span-1">
                 <span className="text-[10px] font-mono text-slate-400 block mb-1">LOCATION</span>
                 <span className="text-sm text-slate-800 font-medium">Chandigarh, India</span>
