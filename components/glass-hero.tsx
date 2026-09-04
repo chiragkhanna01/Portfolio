@@ -493,7 +493,7 @@ export default function GlassHero() {
           {/* Bottom-Left Intersection Node */}
           <div className="absolute bottom-[max(9vw,5.5rem)] left-[max(5.6vw,1rem)] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
             <div className="w-2.5 h-2.5 border border-slate-900/[0.12] dark:border-white/[0.12] rounded-full absolute" />
-            <span className="absolute left-4 -top-3.5 text-[8px] font-mono text-slate-500/50">88.50_S</span>
+            <span className="absolute left-4 -top-3.5 text-[8px] font-mono text-slate-500/50"></span>
           </div>
 
           {/* Top-Right Intersection Node */}
