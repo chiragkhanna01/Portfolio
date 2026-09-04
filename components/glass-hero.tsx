@@ -385,7 +385,7 @@ export default function GlassHero() {
   return (
     <div className="relative w-full min-h-screen bg-white select-none">
       {/* Navigation overlay (Fixed at the top) */}
-      <header className="fixed top-0 left-[max(5.6vw,2rem)] right-[max(5.6vw,2rem)] pt-[max(2.5rem,env(safe-area-inset-top))] z-50 pointer-events-none animate-nav">
+      <header className="fixed top-0 left-[max(5.6vw,1rem)] right-[max(5.6vw,1rem)] pt-[max(2.5rem,env(safe-area-inset-top))] z-50 pointer-events-none animate-nav">
         <nav className="flex items-center justify-between w-full">
           {/* Logo & Brand */}
           <a
@@ -460,7 +460,7 @@ export default function GlassHero() {
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
-        className="relative flex flex-col justify-between w-full h-screen overflow-hidden select-none bg-slate-100"
+        className="relative flex flex-col justify-between w-full min-h-[max(720px,100svh)] h-auto lg:h-screen overflow-hidden select-none bg-slate-100"
       >
         {/* 1. Base portrait (Base_image_desktop) */}
         <div
@@ -481,23 +481,23 @@ export default function GlassHero() {
           <div className="absolute left-0 right-0 bottom-[max(9vw,5.5rem)] h-[1px] bg-slate-900/[0.05] dark:bg-white/[0.05]" />
 
           {/* Vertical grid lines matching content margins */}
-          <div className="absolute top-0 bottom-0 left-[max(5.6vw,2rem)] w-[1px] bg-slate-900/[0.05] dark:bg-white/[0.05]" />
-          <div className="absolute top-0 bottom-0 right-[max(5.6vw,2rem)] w-[1px] bg-slate-900/[0.05] dark:bg-white/[0.05]" />
+          <div className="absolute top-0 bottom-0 left-[max(5.6vw,1rem)] w-[1px] bg-slate-900/[0.05] dark:bg-white/[0.05]" />
+          <div className="absolute top-0 bottom-0 right-[max(5.6vw,1rem)] w-[1px] bg-slate-900/[0.05] dark:bg-white/[0.05]" />
 
           {/* Top-Left Intersection Node */}
-          <div className="absolute top-[34%] left-[max(5.6vw,2rem)] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+          <div className="absolute top-[34%] left-[max(5.6vw,1rem)] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
             <div className="w-2.5 h-2.5 border border-slate-900/[0.12] dark:border-white/[0.12] rounded-full absolute" />
             <span className="absolute left-4 top-2 text-[8px] font-mono text-slate-500/50">34.00_N</span>
           </div>
 
           {/* Bottom-Left Intersection Node */}
-          <div className="absolute bottom-[max(9vw,5.5rem)] left-[max(5.6vw,2rem)] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+          <div className="absolute bottom-[max(9vw,5.5rem)] left-[max(5.6vw,1rem)] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
             <div className="w-2.5 h-2.5 border border-slate-900/[0.12] dark:border-white/[0.12] rounded-full absolute" />
             <span className="absolute left-4 -top-3.5 text-[8px] font-mono text-slate-500/50">88.50_S</span>
           </div>
 
           {/* Top-Right Intersection Node */}
-          <div className="absolute top-[34%] right-[max(5.6vw,2rem)] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+          <div className="absolute top-[34%] right-[max(5.6vw,1rem)] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
             <div className="w-2.5 h-2.5 border border-slate-900/[0.12] dark:border-white/[0.12] rounded-full absolute" />
           </div>
 
@@ -511,8 +511,8 @@ export default function GlassHero() {
 
         {/* 4. Headline and Copy */}
         {/* Editorial Headline */}
-        <section className="absolute top-[34%] left-[max(5.6vw,2rem)] z-20 pointer-events-none">
-          <h1 className="font-sans font-light tracking-[-0.085em] leading-[0.93] text-slate-950 dark:text-black uppercase select-none text-[3.6rem] md:text-[clamp(5.4rem,6.2vw,6.8rem)] flex flex-col">
+        <section className="absolute top-[30%] left-[max(5.6vw,1rem)] z-20 pointer-events-none lg:top-[34%]">
+          <h1 className="font-sans font-light tracking-[-0.085em] leading-[0.93] text-slate-950 dark:text-black uppercase select-none text-[clamp(2.75rem,14vw,3.6rem)] lg:text-[clamp(5.4rem,6.2vw,6.8rem)] flex flex-col">
             <span className="block overflow-hidden pb-1.5 pr-4">
               <span className="block animate-headline-1">Building</span>
             </span>
@@ -526,10 +526,10 @@ export default function GlassHero() {
         </section>
 
         {/* Footer Elements (Intro CTA & Manifesto) */}
-        <footer className="w-full mt-auto px-[max(5.6vw,2rem)] pb-[max(4vw,2.5rem)] flex flex-col md:flex-row md:items-end md:justify-between gap-8 z-20 pointer-events-none">
+        <footer className="w-full mt-auto px-[max(5.6vw,1rem)] pb-[max(4vw,2.5rem)] flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 z-20 pointer-events-none">
           {/* Bottom Left: Intro paragraph and work CTA */}
           <div className="max-w-[420px] pointer-events-auto animate-intro">
-            <p className="font-sans font-light text-slate-800 dark:text-black text-base md:text-[1.125rem] leading-[1.6] select-none mb-6">
+            <p className="font-sans font-light text-slate-800 dark:text-black text-base lg:text-[1.125rem] leading-[1.6] select-none mb-6">
               I build useful products, experiment with emerging technology, and turn the process into stories worth sharing.
             </p>
             <a
@@ -543,7 +543,7 @@ export default function GlassHero() {
           </div>
 
           {/* Bottom Right: Manifesto */}
-          <div className="font-mono text-xs md:text-[0.8rem] tracking-[0.08em] leading-[1.3] text-slate-500/80 dark:text-slate-400/80 md:text-right select-none animate-manifesto self-start md:self-end">
+          <div className="font-mono text-xs lg:text-[0.8rem] tracking-[0.08em] leading-[1.3] text-slate-500/80 dark:text-slate-400/80 lg:text-right select-none animate-manifesto self-start lg:self-end">
             <div>BUILDING THE</div>
             <div>NEXT VERSION</div>
             <div>IN PUBLIC</div>
@@ -1472,7 +1472,7 @@ export default function GlassHero() {
               </div>
               <div className="p-5 bg-white border border-slate-200/50 rounded-xl">
                 <span className="text-[10px] font-mono text-slate-400 block mb-1">LINKEDIN</span>
-                <a href="https://linkedin.com/in/chiragkhanna04" target="_blank" rel="noreferrer" className="text-sm text-slate-800 hover:text-cyan-600 transition-colors font-medium focus-visible:outline-none">
+                <a href="https://linkedin.com/in/chiragkhanna04" target="_blank" rel="noreferrer" className="text-sm text-slate-800 hover:text-cyan-600 transition-colors font-medium break-all focus-visible:outline-none">
                   linkedin.com/in/chiragkhanna04
                 </a>
               </div>
